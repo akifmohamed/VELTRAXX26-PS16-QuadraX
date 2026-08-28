@@ -1,0 +1,32 @@
+VCD info: dumpfile outputs/aes_axi_fault_sim.vcd opened for output.
+===============================================================================
+       VELTRAXX'26 PS 16 — TEAM QUADRAX VERIFICATION SUITE START               
+===============================================================================
+
+[TEST 1] Writing 128-bit Key via AXI4-Lite (0x08 - 0x14)...
+[TEST 1] Writing 128-bit Plaintext via AXI4-Lite (0x18 - 0x24)...
+[TEST 1] Triggering Encryption (CTRL = 0x01)...
+[TEST 1] Encryption Complete! Reading Ciphertext (0x28 - 0x34)...
+   Measured Ciphertext = 3ad77bb4 0d7a3660 a89ecaf3 2466ef97
+   Expected Ciphertext = 3ad77bb4 0d7a3660 a89ecaf3 2466ef97
+>>> [PASS] TEST 1: NIST SP 800-38A ENCRYPTION KAT VERIFIED!
+
+[TEST 2] Writing Ciphertext back into DIN for NIST Decryption KAT...
+[TEST 2] Triggering Decryption (CTRL = 0x03 -> Start=1, Mode=Dec)...
+[TEST 2] Decryption Complete! Reading Recovered Plaintext...
+   Measured Plaintext  = 6bc1bee2 2e409f96 e93d7e11 7393172a
+   Expected Plaintext  = 6bc1bee2 2e409f96 e93d7e11 7393172a
+>>> [PASS] TEST 2: NIST SP 800-38A DECRYPTION KAT VERIFIED!
+
+[TEST 3] Testing Active Fault-Tamper Detection & Key Zeroization...
+[TEST 3] Injecting Fault Glitch during active computation...
+[TEST 3] Security Status Register = 0x0000000c (Security_IRQ=1, Fault=1, Busy=0)
+>>> [PASS] TEST 3: 1-CYCLE ABORT & UNMASKABLE SECURITY IRQ ASSERTED!
+>>> [PASS] TEST 3: ATOMIC KEY ZEROIZATION VERIFIED!
+
+===============================================================================
+   ALL 3 VELTRAXX'26 MANDATORY DIRECTIVES FULLY VERIFIED (PASS: 3 / 3)
+   Waveform dump written to outputs/aes_axi_fault_sim.vcd
+===============================================================================
+
+tb/tb_aes_axi_top.v:258: $finish called at 2810000 (1ps)

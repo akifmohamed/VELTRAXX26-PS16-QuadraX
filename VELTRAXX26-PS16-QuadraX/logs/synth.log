@@ -1,0 +1,2025 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Running command `
+read_verilog -sv src/aes_sbox_shared.v                  src/sub_bytes_shared.v                  src/shift_rows_shared.v                  src/mix_columns_shared.v                  src/key_expand_shared.v                  src/aes_core_bidirectional.v                  src/axi4_lite_slave.v                  src/aes_soc_top.v
+hierarchy -check -top aes_soc_top
+proc; opt; fsm; opt; memory; opt
+techmap; opt
+stat
+write_verilog outputs/aes_soc_netlist.v
+' --
+
+1. Executing Verilog-2005 frontend: src/aes_sbox_shared.v
+Parsing SystemVerilog input from `src/aes_sbox_shared.v' to AST representation.
+Generating RTLIL representation for module `\aes_sbox_shared'.
+Generating RTLIL representation for module `\gf_inv_shared'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: src/sub_bytes_shared.v
+Parsing SystemVerilog input from `src/sub_bytes_shared.v' to AST representation.
+Generating RTLIL representation for module `\sub_bytes_shared'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: src/shift_rows_shared.v
+Parsing SystemVerilog input from `src/shift_rows_shared.v' to AST representation.
+Generating RTLIL representation for module `\shift_rows_shared'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: src/mix_columns_shared.v
+Parsing SystemVerilog input from `src/mix_columns_shared.v' to AST representation.
+Generating RTLIL representation for module `\mix_columns_shared'.
+Generating RTLIL representation for module `\mix_single_column_shared'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: src/key_expand_shared.v
+Parsing SystemVerilog input from `src/key_expand_shared.v' to AST representation.
+Generating RTLIL representation for module `\key_expand_shared'.
+Generating RTLIL representation for module `\key_expand_step'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: src/aes_core_bidirectional.v
+Parsing SystemVerilog input from `src/aes_core_bidirectional.v' to AST representation.
+Generating RTLIL representation for module `\aes_core_bidirectional'.
+src/aes_core_bidirectional.v:130: Warning: Identifier `\u_key_exp.next_k10' is implicitly declared.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: src/axi4_lite_slave.v
+Parsing SystemVerilog input from `src/axi4_lite_slave.v' to AST representation.
+Generating RTLIL representation for module `\axi4_lite_slave'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: src/aes_soc_top.v
+Parsing SystemVerilog input from `src/aes_soc_top.v' to AST representation.
+Generating RTLIL representation for module `\aes_soc_top'.
+Successfully finished Verilog frontend.
+
+9. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1. Analyzing design hierarchy..
+Top module:  \aes_soc_top
+Used module:     \aes_core_bidirectional
+Used module:         \mix_columns_shared
+Used module:             \mix_single_column_shared
+Used module:         \shift_rows_shared
+Used module:         \sub_bytes_shared
+Used module:             \aes_sbox_shared
+Used module:                 \gf_inv_shared
+Used module:         \key_expand_shared
+Used module:             \key_expand_step
+Used module:     \axi4_lite_slave
+
+9.2. Analyzing design hierarchy..
+Top module:  \aes_soc_top
+Used module:     \aes_core_bidirectional
+Used module:         \mix_columns_shared
+Used module:             \mix_single_column_shared
+Used module:         \shift_rows_shared
+Used module:         \sub_bytes_shared
+Used module:             \aes_sbox_shared
+Used module:                 \gf_inv_shared
+Used module:         \key_expand_shared
+Used module:             \key_expand_step
+Used module:     \axi4_lite_slave
+Removed 0 unused modules.
+
+10. Executing PROC pass (convert processes to netlists).
+
+10.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+10.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$src/axi4_lite_slave.v:170$709 in module axi4_lite_slave.
+Marked 1 switch rules as full_case in process $proc$src/axi4_lite_slave.v:93$695 in module axi4_lite_slave.
+Marked 5 switch rules as full_case in process $proc$src/aes_core_bidirectional.v:90$684 in module aes_core_bidirectional.
+Marked 1 switch rules as full_case in process $proc$src/key_expand_shared.v:62$668 in module key_expand_shared.
+Marked 2 switch rules as full_case in process $proc$src/key_expand_shared.v:34$664 in module key_expand_shared.
+Marked 1 switch rules as full_case in process $proc$src/mix_columns_shared.v:69$198 in module mix_single_column_shared.
+Marked 1 switch rules as full_case in process $proc$src/shift_rows_shared.v:32$68 in module shift_rows_shared.
+Removed 1 dead cases from process $proc$src/aes_sbox_shared.v:70$67 in module gf_inv_shared.
+Marked 1 switch rules as full_case in process $proc$src/aes_sbox_shared.v:70$67 in module gf_inv_shared.
+Removed a total of 1 dead cases.
+
+10.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 188 assignments to connections.
+
+10.4. Executing PROC_INIT pass (extract init attributes).
+
+10.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \aresetn in `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+Found async reset \aresetn in `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+Found async reset \rst_n in `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+Found async reset \rst_n in `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+
+10.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 1 switch.
+<suppressed ~20 debug messages>
+
+10.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+     1/4: $0\s_axi_rvalid[0:0]
+     2/4: $0\s_axi_rresp[1:0]
+     3/4: $0\s_axi_rdata[31:0]
+     4/4: $0\s_axi_arready[0:0]
+Creating decoders for process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+     1/19: $0\reg_ctrl[31:0] [31:4]
+     2/19: $0\reg_ctrl[31:0] [2:1]
+     3/19: $0\reg_ctrl[31:0] [3]
+     4/19: $0\w_done[0:0]
+     5/19: $0\aw_done[0:0]
+     6/19: $0\awaddr_reg[7:0]
+     7/19: $0\reg_din3[31:0]
+     8/19: $0\reg_din2[31:0]
+     9/19: $0\reg_din1[31:0]
+    10/19: $0\reg_din0[31:0]
+    11/19: $0\reg_key3[31:0]
+    12/19: $0\reg_key2[31:0]
+    13/19: $0\reg_key1[31:0]
+    14/19: $0\reg_key0[31:0]
+    15/19: $0\reg_ctrl[31:0] [0]
+    16/19: $0\s_axi_bvalid[0:0]
+    17/19: $0\s_axi_bresp[1:0]
+    18/19: $0\s_axi_wready[0:0]
+    19/19: $0\s_axi_awready[0:0]
+Creating decoders for process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+     1/10: $0\load_key_pulse[0:0]
+     2/10: $0\registered_mode[0:0]
+     3/10: $0\registered_key[127:0]
+     4/10: $0\current_state[127:0]
+     5/10: $0\security_irq[0:0]
+     6/10: $0\fault_detected[0:0]
+     7/10: $0\busy[0:0]
+     8/10: $0\done[0:0]
+     9/10: $0\data_out[127:0]
+    10/10: $0\round_num[3:0]
+Creating decoders for process `\key_expand_shared.$proc$src/key_expand_shared.v:62$668'.
+     1/1: $1\sel_rk[127:0]
+Creating decoders for process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+     1/11: $0\rk10[127:0]
+     2/11: $0\rk9[127:0]
+     3/11: $0\rk8[127:0]
+     4/11: $0\rk7[127:0]
+     5/11: $0\rk6[127:0]
+     6/11: $0\rk5[127:0]
+     7/11: $0\rk4[127:0]
+     8/11: $0\rk3[127:0]
+     9/11: $0\rk2[127:0]
+    10/11: $0\rk1[127:0]
+    11/11: $0\rk0[127:0]
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$274'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$263'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$252'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$242'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$231'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$221'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$210'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$200'.
+Creating decoders for process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:69$198'.
+     1/1: $1\col_out[31:0]
+Creating decoders for process `\shift_rows_shared.$proc$src/shift_rows_shared.v:32$68'.
+     1/16: $1\state_out[127:0] [7:0]
+     2/16: $1\state_out[127:0] [39:32]
+     3/16: $1\state_out[127:0] [71:64]
+     4/16: $1\state_out[127:0] [103:96]
+     5/16: $1\state_out[127:0] [15:8]
+     6/16: $1\state_out[127:0] [47:40]
+     7/16: $1\state_out[127:0] [79:72]
+     8/16: $1\state_out[127:0] [111:104]
+     9/16: $1\state_out[127:0] [23:16]
+    10/16: $1\state_out[127:0] [55:48]
+    11/16: $1\state_out[127:0] [87:80]
+    12/16: $1\state_out[127:0] [119:112]
+    13/16: $1\state_out[127:0] [31:24]
+    14/16: $1\state_out[127:0] [63:56]
+    15/16: $1\state_out[127:0] [95:88]
+    16/16: $1\state_out[127:0] [127:120]
+Creating decoders for process `\gf_inv_shared.$proc$src/aes_sbox_shared.v:70$67'.
+     1/1: $1\out_byte[7:0]
+
+10.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\key_expand_shared.\sel_rk' from process `\key_expand_shared.$proc$src/key_expand_shared.v:62$668'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:67$93.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:67$170.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:67$170.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$171.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$171.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$172.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$172.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$173.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$173.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:67$92.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:67$166.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:67$166.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$167.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$167.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$168.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$168.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$169.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$169.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:67$91.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:67$162.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:67$162.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$163.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$163.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$164.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$164.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$165.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$165.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:67$90.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:67$158.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:67$158.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$159.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$159.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$160.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$160.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$161.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$161.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:66$89.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:66$154.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:66$154.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$155.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$155.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$156.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$156.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$157.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$157.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:66$88.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:66$150.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:66$150.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$151.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$151.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$152.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$152.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$153.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$153.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:66$87.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:66$146.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:66$146.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$147.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$147.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$148.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$148.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$149.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$149.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:66$86.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:66$142.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:66$142.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$143.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$143.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$144.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$144.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$145.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$145.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:65$85.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:65$138.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:65$138.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$139.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$139.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$140.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$140.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$141.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$141.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:65$84.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:65$134.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:65$134.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$135.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$135.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$136.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$136.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$137.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$137.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:65$83.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:65$130.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:65$130.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$131.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$131.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$132.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$132.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$133.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$133.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:65$82.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:65$126.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:65$126.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$127.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$127.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$128.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$128.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$129.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$129.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:64$81.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:64$122.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\mul9$func$src/mix_columns_shared.v:64$122.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$123.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$123.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$124.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$124.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$125.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:42$125.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:64$80.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:64$118.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\mul13$func$src/mix_columns_shared.v:64$118.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$119.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$119.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$120.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$120.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$121.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:50$121.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:64$79.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:64$114.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\mul11$func$src/mix_columns_shared.v:64$114.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$115.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$115.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$116.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$116.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$117.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:46$117.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:64$78.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:64$110.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\mul14$func$src/mix_columns_shared.v:64$110.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$111.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$111.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$112.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$112.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$113.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:54$113.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:61$77.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$274'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:61$108.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$274'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:61$108.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$274'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$109.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$274'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$109.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$274'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:61$76.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$263'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:61$106.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$263'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:61$106.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$263'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$107.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$263'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$107.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$263'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:60$75.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$252'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:60$104.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$252'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:60$104.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$252'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$105.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$252'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$105.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$252'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:60$74.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$242'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:60$102.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$242'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:60$102.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$242'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$103.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$242'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$103.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$242'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:59$73.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$231'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:59$100.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$231'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:59$100.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$231'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$101.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$231'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$101.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$231'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:59$72.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$221'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:59$98.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$221'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:59$98.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$221'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$99.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$221'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$99.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$221'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:58$71.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$210'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:58$96.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$210'.
+No latch inferred for signal `\mix_single_column_shared.\mul3$func$src/mix_columns_shared.v:58$96.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$210'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$97.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$210'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:38$97.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$210'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:58$70.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$200'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:58$94.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$200'.
+No latch inferred for signal `\mix_single_column_shared.\mul2$func$src/mix_columns_shared.v:58$94.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$200'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$95.$result' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$200'.
+No latch inferred for signal `\mix_single_column_shared.\xtime$func$src/mix_columns_shared.v:34$95.b' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:0$200'.
+No latch inferred for signal `\mix_single_column_shared.\col_out' from process `\mix_single_column_shared.$proc$src/mix_columns_shared.v:69$198'.
+No latch inferred for signal `\shift_rows_shared.\state_out' from process `\shift_rows_shared.$proc$src/shift_rows_shared.v:32$68'.
+No latch inferred for signal `\gf_inv_shared.\out_byte' from process `\gf_inv_shared.$proc$src/aes_sbox_shared.v:70$67'.
+
+10.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\axi4_lite_slave.\s_axi_arready' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+  created $adff cell `$procdff$1096' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\s_axi_rdata' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+  created $adff cell `$procdff$1101' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\s_axi_rresp' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+  created $adff cell `$procdff$1106' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\s_axi_rvalid' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+  created $adff cell `$procdff$1111' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\s_axi_awready' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1116' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\s_axi_wready' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1121' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\s_axi_bresp' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1126' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\s_axi_bvalid' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1131' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_ctrl' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1136' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_key0' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1141' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_key1' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1146' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_key2' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1151' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_key3' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1156' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_din0' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1161' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_din1' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1166' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_din2' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1171' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\reg_din3' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1176' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\awaddr_reg' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1181' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\aw_done' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1186' with positive edge clock and positive level reset.
+Creating register for signal `\axi4_lite_slave.\w_done' using process `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+  created $adff cell `$procdff$1191' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\round_num' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1196' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\data_out' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1201' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\done' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1206' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\busy' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1211' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\fault_detected' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1216' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\security_irq' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1221' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\current_state' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1226' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\registered_key' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1231' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\registered_mode' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1236' with positive edge clock and positive level reset.
+Creating register for signal `\aes_core_bidirectional.\load_key_pulse' using process `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+  created $adff cell `$procdff$1241' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk0' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1246' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk1' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1251' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk2' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1256' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk3' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1261' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk4' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1266' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk5' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1271' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk6' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1276' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk7' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1281' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk8' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1286' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk9' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1291' with positive edge clock and positive level reset.
+Creating register for signal `\key_expand_shared.\rk10' using process `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+  created $adff cell `$procdff$1296' with positive edge clock and positive level reset.
+
+10.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+10.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+Removing empty process `axi4_lite_slave.$proc$src/axi4_lite_slave.v:170$709'.
+Found and cleaned up 6 empty switches in `\axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+Removing empty process `axi4_lite_slave.$proc$src/axi4_lite_slave.v:93$695'.
+Found and cleaned up 6 empty switches in `\aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+Removing empty process `aes_core_bidirectional.$proc$src/aes_core_bidirectional.v:90$684'.
+Found and cleaned up 1 empty switch in `\key_expand_shared.$proc$src/key_expand_shared.v:62$668'.
+Removing empty process `key_expand_shared.$proc$src/key_expand_shared.v:62$668'.
+Found and cleaned up 2 empty switches in `\key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+Removing empty process `key_expand_shared.$proc$src/key_expand_shared.v:34$664'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$640'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$617'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$593'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$569'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$545'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$521'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$498'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$474'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$450'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$426'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$402'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$379'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$356'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$332'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$308'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$284'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$274'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$263'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$252'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$242'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$231'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$221'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$210'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:0$200'.
+Found and cleaned up 1 empty switch in `\mix_single_column_shared.$proc$src/mix_columns_shared.v:69$198'.
+Removing empty process `mix_single_column_shared.$proc$src/mix_columns_shared.v:69$198'.
+Found and cleaned up 1 empty switch in `\shift_rows_shared.$proc$src/shift_rows_shared.v:32$68'.
+Removing empty process `shift_rows_shared.$proc$src/shift_rows_shared.v:32$68'.
+Found and cleaned up 1 empty switch in `\gf_inv_shared.$proc$src/aes_sbox_shared.v:70$67'.
+Removing empty process `gf_inv_shared.$proc$src/aes_sbox_shared.v:70$67'.
+Cleaned up 21 empty switches.
+
+10.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+<suppressed ~45 debug messages>
+Optimizing module aes_core_bidirectional.
+<suppressed ~21 debug messages>
+Optimizing module key_expand_step.
+Optimizing module key_expand_shared.
+<suppressed ~23 debug messages>
+Optimizing module mix_single_column_shared.
+<suppressed ~169 debug messages>
+Optimizing module mix_columns_shared.
+Optimizing module shift_rows_shared.
+<suppressed ~8 debug messages>
+Optimizing module sub_bytes_shared.
+Optimizing module gf_inv_shared.
+Optimizing module aes_sbox_shared.
+<suppressed ~16 debug messages>
+
+11. Executing OPT pass (performing simple optimizations).
+
+11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module aes_core_bidirectional.
+Optimizing module key_expand_step.
+Optimizing module key_expand_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module mix_columns_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+Optimizing module gf_inv_shared.
+Optimizing module aes_sbox_shared.
+
+11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+<suppressed ~75 debug messages>
+Finding identical cells in module `\aes_core_bidirectional'.
+<suppressed ~30 debug messages>
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\key_expand_shared'.
+<suppressed ~30 debug messages>
+Finding identical cells in module `\mix_single_column_shared'.
+<suppressed ~60 debug messages>
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\aes_sbox_shared'.
+<suppressed ~12 debug messages>
+Removed a total of 69 cells.
+
+11.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$933: \busy -> 1'0
+      Replacing known input bits on port B of cell $procmux$931: \busy -> 1'1
+      Replacing known input bits on port A of cell $procmux$928: \busy -> 1'1
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~123 debug messages>
+
+11.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \aes_sbox_shared.
+Performed a total of 0 changes.
+
+11.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+<suppressed ~132 debug messages>
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\aes_sbox_shared'.
+Removed a total of 44 cells.
+
+11.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$1176 ($adff) from module axi4_lite_slave (D = \s_axi_wdata, Q = \reg_din3).
+Adding EN signal on $procdff$1121 ($adff) from module axi4_lite_slave (D = $procmux$881_Y, Q = \s_axi_wready).
+Adding EN signal on $procdff$1181 ($adff) from module axi4_lite_slave (D = \s_axi_awaddr, Q = \awaddr_reg).
+Adding EN signal on $procdff$1126 ($adff) from module axi4_lite_slave (D = 2'00, Q = \s_axi_bresp).
+Adding EN signal on $procdff$1191 ($adff) from module axi4_lite_slave (D = $procmux$785_Y, Q = \w_done).
+Adding EN signal on $procdff$1096 ($adff) from module axi4_lite_slave (D = $procmux$745_Y, Q = \s_axi_arready).
+Adding EN signal on $procdff$1166 ($adff) from module axi4_lite_slave (D = \s_axi_wdata, Q = \reg_din1).
+Adding EN signal on $procdff$1101 ($adff) from module axi4_lite_slave (D = $procmux$729_Y, Q = \s_axi_rdata).
+Adding EN signal on $procdff$1131 ($adff) from module axi4_lite_slave (D = $procmux$875_Y, Q = \s_axi_bvalid).
+Adding EN signal on $procdff$1106 ($adff) from module axi4_lite_slave (D = 2'00, Q = \s_axi_rresp).
+Adding EN signal on $procdff$1171 ($adff) from module axi4_lite_slave (D = \s_axi_wdata, Q = \reg_din2).
+Adding EN signal on $procdff$1186 ($adff) from module axi4_lite_slave (D = $procmux$789_Y, Q = \aw_done).
+Adding EN signal on $procdff$1111 ($adff) from module axi4_lite_slave (D = $procmux$722_Y, Q = \s_axi_rvalid).
+Adding EN signal on $procdff$1136 ($adff) from module axi4_lite_slave (D = \s_axi_wdata [31:4], Q = \reg_ctrl [31:4]).
+Adding EN signal on $procdff$1136 ($adff) from module axi4_lite_slave (D = \s_axi_wdata [2:1], Q = \reg_ctrl [2:1]).
+Adding EN signal on $procdff$1161 ($adff) from module axi4_lite_slave (D = \s_axi_wdata, Q = \reg_din0).
+Adding EN signal on $procdff$1116 ($adff) from module axi4_lite_slave (D = $procmux$885_Y, Q = \s_axi_awready).
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$1442 ($adffe) from module axi4_lite_slave.
+Setting constant 0-bit at position 1 on $auto$ff.cc:266:slice$1442 ($adffe) from module axi4_lite_slave.
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$1428 ($adffe) from module axi4_lite_slave.
+Setting constant 0-bit at position 1 on $auto$ff.cc:266:slice$1428 ($adffe) from module axi4_lite_slave.
+Adding EN signal on $procdff$1236 ($adff) from module aes_core_bidirectional (D = \enc_dec, Q = \registered_mode).
+Adding EN signal on $procdff$1196 ($adff) from module aes_core_bidirectional (D = $procmux$978_Y, Q = \round_num).
+Adding EN signal on $procdff$1231 ($adff) from module aes_core_bidirectional (D = $procmux$903_Y, Q = \registered_key).
+Adding EN signal on $procdff$1226 ($adff) from module aes_core_bidirectional (D = $procmux$914_Y, Q = \current_state).
+Adding EN signal on $procdff$1201 ($adff) from module aes_core_bidirectional (D = $procmux$965_Y, Q = \data_out).
+Adding EN signal on $procdff$1221 ($adff) from module aes_core_bidirectional (D = $procmux$920_Y, Q = \security_irq).
+Adding EN signal on $procdff$1216 ($adff) from module aes_core_bidirectional (D = $procmux$926_Y, Q = \fault_detected).
+Adding EN signal on $procdff$1206 ($adff) from module aes_core_bidirectional (D = $procmux$952_Y, Q = \done).
+Adding EN signal on $procdff$1296 ($adff) from module key_expand_shared (D = $procmux$996_Y, Q = \rk10).
+Adding EN signal on $procdff$1246 ($adff) from module key_expand_shared (D = $procmux$1046_Y, Q = \rk0).
+Adding EN signal on $procdff$1281 ($adff) from module key_expand_shared (D = $procmux$1011_Y, Q = \rk7).
+Adding EN signal on $procdff$1266 ($adff) from module key_expand_shared (D = $procmux$1026_Y, Q = \rk4).
+Adding EN signal on $procdff$1251 ($adff) from module key_expand_shared (D = $procmux$1041_Y, Q = \rk1).
+Adding EN signal on $procdff$1286 ($adff) from module key_expand_shared (D = $procmux$1006_Y, Q = \rk8).
+Adding EN signal on $procdff$1276 ($adff) from module key_expand_shared (D = $procmux$1016_Y, Q = \rk6).
+Adding EN signal on $procdff$1256 ($adff) from module key_expand_shared (D = $procmux$1036_Y, Q = \rk2).
+Adding EN signal on $procdff$1271 ($adff) from module key_expand_shared (D = $procmux$1021_Y, Q = \rk5).
+Adding EN signal on $procdff$1291 ($adff) from module key_expand_shared (D = $procmux$1001_Y, Q = \rk9).
+Adding EN signal on $procdff$1261 ($adff) from module key_expand_shared (D = $procmux$1031_Y, Q = \rk3).
+
+11.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \aes_sbox_shared..
+Removed 75 unused cells and 902 unused wires.
+<suppressed ~96 debug messages>
+
+11.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+<suppressed ~6 debug messages>
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+<suppressed ~7 debug messages>
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+11.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+11.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~73 debug messages>
+
+11.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+11.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+<suppressed ~30 debug messages>
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 12 cells.
+
+11.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+Removed 0 unused cells and 11 unused wires.
+<suppressed ~2 debug messages>
+
+11.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+11.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+11.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~72 debug messages>
+
+11.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+11.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+11.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+
+11.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+11.23. Finished OPT passes. (There is nothing left to do.)
+
+12. Executing FSM pass (extract and optimize FSM).
+
+12.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+12.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+12.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+12.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+
+12.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+12.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+12.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+12.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+13. Executing OPT pass (performing simple optimizations).
+
+13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~72 debug messages>
+
+13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+13.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+13.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+
+13.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+13.9. Finished OPT passes. (There is nothing left to do.)
+
+14. Executing MEMORY pass.
+
+14.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+14.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+14.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+14.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+14.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+Checking read port `$auto$proc_rom.cc:155:do_switch$716'[0] in module `\gf_inv_shared': no output FF found.
+Checking read port address `$auto$proc_rom.cc:155:do_switch$716'[0] in module `\gf_inv_shared': no address FF found.
+
+14.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+
+14.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+14.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+14.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+
+14.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+14.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory $auto$proc_rom.cc:155:do_switch$716 in module \gf_inv_shared:
+  created 256 $dff cells and 0 static cells of width 8.
+  read interface: 0 $dff and 255 $mux cells.
+  write interface: 0 write mux blocks.
+
+15. Executing OPT pass (performing simple optimizations).
+
+15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~73 debug messages>
+
+15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+Removed 0 unused cells and 256 unused wires.
+<suppressed ~1 debug messages>
+
+15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~73 debug messages>
+
+15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+15.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+
+15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+15.16. Finished OPT passes. (There is nothing left to do.)
+
+16. Executing TECHMAP pass (map to technology primitives).
+
+16.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+16.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $xor.
+Using extmapper simplemap for cells of type $not.
+Running "alumacc" on wrapper $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $eq.
+Using template $paramod$5e4173b1bcb6835e18c45a334b31698ee5e67e4d\_90_pmux for cells of type $pmux.
+Using extmapper simplemap for cells of type $logic_not.
+Using template $paramod$740b056ede97228d3eae64ea2fdc81f0a33e0fe7\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $logic_and.
+Using template $paramod$104d3d1e82b09b030a785dad8a5e608a6d4401f7\_90_pmux for cells of type $pmux.
+Using extmapper simplemap for cells of type $ne.
+Running "alumacc" on wrapper $extern:wrap:$lt:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$lt:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$lt:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47.
+No more expansions possible.
+<suppressed ~1117 debug messages>
+
+17. Executing OPT pass (performing simple optimizations).
+
+17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+<suppressed ~719 debug messages>
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+<suppressed ~322 debug messages>
+Optimizing module gf_inv_shared.
+<suppressed ~889 debug messages>
+Optimizing module key_expand_shared.
+<suppressed ~63 debug messages>
+Optimizing module key_expand_step.
+<suppressed ~24 debug messages>
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+<suppressed ~168 debug messages>
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+<suppressed ~30 debug messages>
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+<suppressed ~315 debug messages>
+Finding identical cells in module `\gf_inv_shared'.
+<suppressed ~2190 debug messages>
+Finding identical cells in module `\key_expand_shared'.
+<suppressed ~87 debug messages>
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 874 cells.
+
+17.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+17.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+17.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+17.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+17.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+Removed 13 unused cells and 981 unused wires.
+<suppressed ~17 debug messages>
+
+17.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+<suppressed ~9 debug messages>
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+17.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+17.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+17.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+17.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+17.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+17.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+17.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+17.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+17.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \aes_core_bidirectional..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \aes_sbox_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \aes_soc_top..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \axi4_lite_slave..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \gf_inv_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \key_expand_step..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_columns_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \mix_single_column_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \shift_rows_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \sub_bytes_shared..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+17.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \aes_core_bidirectional.
+  Optimizing cells in module \aes_sbox_shared.
+  Optimizing cells in module \aes_soc_top.
+  Optimizing cells in module \axi4_lite_slave.
+  Optimizing cells in module \gf_inv_shared.
+  Optimizing cells in module \key_expand_shared.
+  Optimizing cells in module \key_expand_step.
+  Optimizing cells in module \mix_columns_shared.
+  Optimizing cells in module \mix_single_column_shared.
+  Optimizing cells in module \shift_rows_shared.
+  Optimizing cells in module \sub_bytes_shared.
+Performed a total of 0 changes.
+
+17.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\aes_core_bidirectional'.
+Finding identical cells in module `\aes_sbox_shared'.
+Finding identical cells in module `\aes_soc_top'.
+Finding identical cells in module `\axi4_lite_slave'.
+Finding identical cells in module `\gf_inv_shared'.
+Finding identical cells in module `\key_expand_shared'.
+Finding identical cells in module `\key_expand_step'.
+Finding identical cells in module `\mix_columns_shared'.
+Finding identical cells in module `\mix_single_column_shared'.
+Finding identical cells in module `\shift_rows_shared'.
+Finding identical cells in module `\sub_bytes_shared'.
+Removed a total of 0 cells.
+
+17.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+17.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \aes_core_bidirectional..
+Finding unused cells or wires in module \aes_sbox_shared..
+Finding unused cells or wires in module \aes_soc_top..
+Finding unused cells or wires in module \axi4_lite_slave..
+Finding unused cells or wires in module \gf_inv_shared..
+Finding unused cells or wires in module \key_expand_shared..
+Finding unused cells or wires in module \key_expand_step..
+Finding unused cells or wires in module \mix_columns_shared..
+Finding unused cells or wires in module \mix_single_column_shared..
+Finding unused cells or wires in module \shift_rows_shared..
+Finding unused cells or wires in module \sub_bytes_shared..
+
+17.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module aes_core_bidirectional.
+Optimizing module aes_sbox_shared.
+Optimizing module aes_soc_top.
+Optimizing module axi4_lite_slave.
+Optimizing module gf_inv_shared.
+Optimizing module key_expand_shared.
+Optimizing module key_expand_step.
+Optimizing module mix_columns_shared.
+Optimizing module mix_single_column_shared.
+Optimizing module shift_rows_shared.
+Optimizing module sub_bytes_shared.
+
+17.23. Finished OPT passes. (There is nothing left to do.)
+
+18. Printing statistics.
+
+=== aes_core_bidirectional ===
+
+   Number of wires:                 92
+   Number of wire bits:           3695
+   Number of public wires:          31
+   Number of public wire bits:    2066
+   Number of ports:                 12
+   Number of port bits:            393
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2642
+     $_AND_                         13
+     $_DFFE_PN0P_                  263
+     $_DFF_PN0_                      2
+     $_MUX_                       1949
+     $_NOT_                          9
+     $_OR_                          14
+     $_XOR_                        388
+     key_expand_shared               1
+     mix_columns_shared              1
+     shift_rows_shared               1
+     sub_bytes_shared                1
+
+=== aes_sbox_shared ===
+
+   Number of wires:                 41
+   Number of wire bits:             83
+   Number of public wires:           7
+   Number of public wire bits:      49
+   Number of ports:                  3
+   Number of port bits:             17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 67
+     $_MUX_                         16
+     $_NOT_                          6
+     $_XOR_                         44
+     gf_inv_shared                   1
+
+=== aes_soc_top ===
+
+   Number of wires:                 39
+   Number of wire bits:            512
+   Number of public wires:          38
+   Number of public wire bits:     511
+   Number of ports:                 26
+   Number of port bits:            118
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  4
+     $_AND_                          1
+     $_NOT_                          1
+     aes_core_bidirectional          1
+     axi4_lite_slave                 1
+
+=== axi4_lite_slave ===
+
+   Number of wires:                254
+   Number of wire bits:           2049
+   Number of public wires:          45
+   Number of public wire bits:     828
+   Number of ports:                 32
+   Number of port bits:            498
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1436
+     $_AND_                        304
+     $_DFFE_PN0P_                  202
+     $_DFFE_PN1P_                    3
+     $_DFF_PN0_                    130
+     $_MUX_                        442
+     $_NOT_                         24
+     $_OR_                         331
+
+=== gf_inv_shared ===
+
+   Number of wires:                 66
+   Number of wire bits:            528
+   Number of public wires:           2
+   Number of public wire bits:      16
+   Number of ports:                  2
+   Number of port bits:             16
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                412
+     $_MUX_                        410
+     $_NOT_                          2
+
+=== key_expand_shared ===
+
+   Number of wires:                434
+   Number of wire bits:           4423
+   Number of public wires:          20
+   Number of public wire bits:    1677
+   Number of ports:                  8
+   Number of port bits:            265
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               3008
+     $_AND_                       1410
+     $_MUX_                        259
+     $_NOT_                         17
+     $_OR_                        1309
+     $_XOR_                          3
+     key_expand_step                10
+
+=== key_expand_step ===
+
+   Number of wires:                 13
+   Number of wire bits:            584
+   Number of public wires:          12
+   Number of public wire bits:     552
+   Number of ports:                  3
+   Number of port bits:            264
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                140
+     $_XOR_                        136
+     aes_sbox_shared                 4
+
+=== mix_columns_shared ===
+
+   Number of wires:                  3
+   Number of wire bits:            257
+   Number of public wires:           3
+   Number of public wire bits:     257
+   Number of ports:                  3
+   Number of port bits:            257
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  4
+     mix_single_column_shared        4
+
+=== mix_single_column_shared ===
+
+   Number of wires:                191
+   Number of wire bits:           1457
+   Number of public wires:         119
+   Number of public wire bits:     993
+   Number of ports:                  3
+   Number of port bits:             65
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                584
+     $_MUX_                        116
+     $_NOT_                         84
+     $_XOR_                        384
+
+=== shift_rows_shared ===
+
+   Number of wires:                 19
+   Number of wire bits:            385
+   Number of public wires:          19
+   Number of public wire bits:     385
+   Number of ports:                  3
+   Number of port bits:            257
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 64
+     $_MUX_                         64
+
+=== sub_bytes_shared ===
+
+   Number of wires:                  3
+   Number of wire bits:            257
+   Number of public wires:           3
+   Number of public wire bits:     257
+   Number of ports:                  3
+   Number of port bits:            257
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 16
+     aes_sbox_shared                16
+
+=== design hierarchy ===
+
+   aes_soc_top                       1
+     aes_core_bidirectional          1
+       key_expand_shared             1
+         key_expand_step            10
+           aes_sbox_shared           4
+             gf_inv_shared           1
+       mix_columns_shared            1
+         mix_single_column_shared      4
+       shift_rows_shared             1
+       sub_bytes_shared              1
+         aes_sbox_shared            16
+           gf_inv_shared             1
+     axi4_lite_slave                 1
+
+   Number of wires:               7730
+   Number of wire bits:          57462
+   Number of public wires:        1259
+   Number of public wire bits:   19113
+   Number of ports:                409
+   Number of port bits:           6793
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              37602
+     $_AND_                       1728
+     $_DFFE_PN0P_                  465
+     $_DFFE_PN1P_                    3
+     $_DFF_PN0_                    132
+     $_MUX_                      27034
+     $_NOT_                        835
+     $_OR_                        1654
+     $_XOR_                       5751
+
+19. Executing Verilog backend.
+
+19.1. Executing BMUXMAP pass.
+
+19.2. Executing DEMUXMAP pass.
+Dumping module `\aes_core_bidirectional'.
+Dumping module `\aes_sbox_shared'.
+Dumping module `\aes_soc_top'.
+Dumping module `\axi4_lite_slave'.
+Dumping module `\gf_inv_shared'.
+Dumping module `\key_expand_shared'.
+Dumping module `\key_expand_step'.
+Dumping module `\mix_columns_shared'.
+Dumping module `\mix_single_column_shared'.
+Dumping module `\shift_rows_shared'.
+Dumping module `\sub_bytes_shared'.
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: 28b4223250, CPU: user 1.36s system 0.02s, MEM: 36.38 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 25% 16x opt_expr (0 sec), 21% 13x opt_clean (0 sec), ...
