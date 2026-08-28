@@ -1,0 +1,40 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Aug 28 10:32:09 2026
+[*]
+[dumpfile] "/home/akif/VELTRAXX26-PS16-QuadraX/outputs/aes_axi_fault_sim.vcd"
+[dumpfile_mtime] "Fri Aug 28 09:35:36 2026"
+[dumpfile_size] 281253
+[savefile] "/home/akif/VELTRAXX26-PS16-QuadraX/outputs/aes_sim.gtkw"
+[timestart] 0
+[size] 1920 1016
+[pos] -51 -51
+*-18.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_aes_axi_top.
+[treeopen] tb_aes_axi_top.dut.
+[treeopen] tb_aes_axi_top.dut.u_aes_core.
+[sst_width] 233
+[signals_width] 222
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+tb_aes_axi_top.dut.u_aes_core.clk
+tb_aes_axi_top.dut.u_aes_core.rst_n
+tb_aes_axi_top.dut.u_aes_core.start
+tb_aes_axi_top.dut.u_aes_core.enc_dec
+tb_aes_axi_top.dut.u_aes_core.busy
+tb_aes_axi_top.dut.u_aes_core.done
+@22
+tb_aes_axi_top.dut.u_aes_core.current_state[127:0]
+tb_aes_axi_top.dut.u_aes_core.current_round_key[127:0]
+@28
+tb_aes_axi_top.dut.u_aes_core.security_irq
+tb_aes_axi_top.dut.u_aes_core.fault_detected
+@22
+tb_aes_axi_top.dut.u_axi_slave.s_axi_awaddr[7:0]
+@23
+tb_aes_axi_top.dut.u_axi_slave.s_axi_wdata[31:0]
+@22
+tb_aes_axi_top.dut.u_axi_slave.s_axi_rdata[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
