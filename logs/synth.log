@@ -1807,6 +1807,6 @@ Dumping module `\sub_bytes_shared'.
 
 Warnings: 1 unique messages, 1 total
 End of script. Logfile hash: eea565780f
-CPU: user 5.56s system 0.04s, MEM: 56.21 MB total, 48.71 MB resident
+CPU: user 5.30s system 0.04s, MEM: 56.21 MB total, 48.77 MB resident
 Yosys 0.9 (git sha1 1979e0b)
 Time spent: 19% 11x opt_merge (1 sec), 18% 11x opt_expr (0 sec), ...
