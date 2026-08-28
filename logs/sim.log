@@ -29,4 +29,3 @@ VCD info: dumpfile outputs/aes_axi_fault_sim.vcd opened for output.
    Waveform dump written to outputs/aes_axi_fault_sim.vcd
 ===============================================================================
 
-tb/tb_aes_axi_top.v:258: $finish called at 2810000 (1ps)
