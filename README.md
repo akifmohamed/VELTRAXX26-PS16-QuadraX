@@ -72,7 +72,7 @@ In response to the official **VELTRAXX’26 PS 16 Wildcard Mandate**, Team **Qua
 ## 3. Waveform Verification Proof
 
 ### Verified GTKWave Execution Trace: NIST Encrypt KAT, Decrypt KAT & 1-Cycle Key Zeroization
-![Waveform Evidence](outputs/waveform_evidence.png)
+![Waveform Evidence](outputs/waveform_for_understanding.png)
 
 ---
 
