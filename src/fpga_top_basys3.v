@@ -64,53 +64,89 @@ module fpga_top_basys3 (
         .led_done(soc_done), .led_fault(soc_fault), .led_data(soc_data)
     );
 
-    reg [4:0] fsm_state;
+    reg [3:0] step;
     reg [7:0] latched_leds;
     reg       latched_done, latched_fault, is_dec_op;
-
-    localparam S_IDLE=5'd0, S_WR_KEY0=5'd1, S_WR_KEY1=5'd2, S_WR_KEY2=5'd3, S_WR_KEY3=5'd4;
-    localparam S_WR_DIN0=5'd5, S_WR_DIN1=5'd6, S_WR_DIN2=5'd7, S_WR_DIN3=5'd8, S_WR_CTRL=5'd9;
-    localparam S_WAIT_CORE=5'd10, S_RD_DOUT0=5'd11, S_DISPLAY=5'd12;
+    reg       in_progress;
+    reg       reading_result;
 
     always @(posedge clk50 or negedge rst_n) begin
         if (!rst_n) begin
-            fsm_state <= S_IDLE;
-            s_axi_awvalid <= 1'b0; s_axi_wvalid <= 1'b0; s_axi_bready <= 1'b0;
-            s_axi_arvalid <= 1'b0; s_axi_rready <= 1'b0;
-            latched_leds <= 8'h00; latched_done <= 1'b0; latched_fault <= 1'b0;
-            is_dec_op <= 1'b0;
+            step           <= 4'd0;
+            s_axi_awvalid  <= 1'b0;
+            s_axi_wvalid   <= 1'b0;
+            s_axi_bready   <= 1'b0;
+            s_axi_arvalid  <= 1'b0;
+            s_axi_rready   <= 1'b0;
+            latched_leds   <= 8'h00;
+            latched_done   <= 1'b0;
+            latched_fault  <= 1'b0;
+            is_dec_op      <= 1'b0;
+            in_progress    <= 1'b0;
+            reading_result <= 1'b0;
         end else if (trig_fault) begin
-            latched_leds <= 8'h00; latched_done <= 1'b0; latched_fault <= 1'b1;
-            fsm_state <= S_IDLE;
+            latched_leds   <= 8'h00;
+            latched_done   <= 1'b0;
+            latched_fault  <= 1'b1;
+            in_progress    <= 1'b0;
+            reading_result <= 1'b0;
+            s_axi_awvalid  <= 1'b0;
+            s_axi_wvalid   <= 1'b0;
+            s_axi_arvalid  <= 1'b0;
         end else begin
-            case (fsm_state)
-                S_IDLE: begin
-                    if (trig_enc || trig_dec) begin
-                        is_dec_op <= trig_dec; latched_done <= 1'b0; latched_fault <= 1'b0;
-                        s_axi_awaddr <= 8'h08; s_axi_wdata <= 32'h09CF4F3C;
-                        s_axi_awvalid <= 1'b1; s_axi_wvalid <= 1'b1; s_axi_bready <= 1'b1;
-                        fsm_state <= S_WR_KEY0;
-                    end
+            if (!in_progress && !reading_result) begin
+                if (trig_enc || trig_dec) begin
+                    is_dec_op      <= trig_dec;
+                    latched_done   <= 1'b0;
+                    latched_fault  <= 1'b0;
+                    in_progress    <= 1'b1;
+                    reading_result <= 1'b0;
+                    step           <= 4'd0;
+                    s_axi_awaddr   <= 8'h08;
+                    s_axi_wdata    <= 32'h09CF4F3C;
+                    s_axi_awvalid  <= 1'b1;
+                    s_axi_wvalid   <= 1'b1;
+                    s_axi_bready   <= 1'b1;
                 end
-                S_WR_KEY0: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h0C; s_axi_wdata <= 32'hABF71588; fsm_state <= S_WR_KEY1; end
-                S_WR_KEY1: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h10; s_axi_wdata <= 32'h28AED2A6; fsm_state <= S_WR_KEY2; end
-                S_WR_KEY2: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h14; s_axi_wdata <= 32'h2B7E1516; fsm_state <= S_WR_KEY3; end
-                S_WR_KEY3: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h18; s_axi_wdata <= is_dec_op ? 32'h2466EF97 : 32'h7393172A; fsm_state <= S_WR_DIN0; end
-                S_WR_DIN0: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h1C; s_axi_wdata <= is_dec_op ? 32'hA89ECAF3 : 32'hE93D7E11; fsm_state <= S_WR_DIN1; end
-                S_WR_DIN1: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h20; s_axi_wdata <= is_dec_op ? 32'h0D7A3660 : 32'h2E409F96; fsm_state <= S_WR_DIN2; end
-                S_WR_DIN2: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h24; s_axi_wdata <= is_dec_op ? 32'h3AD77BB4 : 32'h6BC1BEE2; fsm_state <= S_WR_DIN3; end
-                S_WR_DIN3: if (s_axi_bvalid) begin s_axi_awaddr <= 8'h00; s_axi_wdata <= is_dec_op ? 32'h00000003 : 32'h00000001; fsm_state <= S_WR_CTRL; end
-                S_WR_CTRL: if (s_axi_bvalid) begin s_axi_awvalid <= 1'b0; s_axi_wvalid <= 1'b0; s_axi_bready <= 1'b0; fsm_state <= S_WAIT_CORE; end
-                S_WAIT_CORE: if (soc_done) begin s_axi_araddr <= 8'h28; s_axi_arvalid <= 1'b1; s_axi_rready <= 1'b1; fsm_state <= S_RD_DOUT0; end
-                S_RD_DOUT0: if (s_axi_rvalid) begin s_axi_arvalid <= 1'b0; s_axi_rready <= 1'b0; latched_leds <= s_axi_rdata[7:0]; latched_done <= 1'b1; fsm_state <= S_DISPLAY; end
-                S_DISPLAY: if (trig_enc || trig_dec) fsm_state <= S_IDLE;
-                default: fsm_state <= S_IDLE;
-            endcase
+            end else if (in_progress) begin
+                if (s_axi_bvalid && s_axi_bready) begin
+                    case (step)
+                        4'd0: begin s_axi_awaddr <= 8'h0C; s_axi_wdata <= 32'hABF71588; step <= 4'd1; end
+                        4'd1: begin s_axi_awaddr <= 8'h10; s_axi_wdata <= 32'h28AED2A6; step <= 4'd2; end
+                        4'd2: begin s_axi_awaddr <= 8'h14; s_axi_wdata <= 32'h2B7E1516; step <= 4'd3; end
+                        4'd3: begin s_axi_awaddr <= 8'h18; s_axi_wdata <= is_dec_op ? 32'h2466EF97 : 32'h7393172A; step <= 4'd4; end
+                        4'd4: begin s_axi_awaddr <= 8'h1C; s_axi_wdata <= is_dec_op ? 32'hA89ECAF3 : 32'hE93D7E11; step <= 4'd5; end
+                        4'd5: begin s_axi_awaddr <= 8'h20; s_axi_wdata <= is_dec_op ? 32'h0D7A3660 : 32'h2E409F96; step <= 4'd6; end
+                        4'd6: begin s_axi_awaddr <= 8'h24; s_axi_wdata <= is_dec_op ? 32'h3AD77BB4 : 32'h6BC1BEE2; step <= 4'd7; end
+                        4'd7: begin s_axi_awaddr <= 8'h00; s_axi_wdata <= is_dec_op ? 32'h00000003 : 32'h00000001; step <= 4'd8; end
+                        4'd8: begin
+                            s_axi_awvalid  <= 1'b0;
+                            s_axi_wvalid   <= 1'b0;
+                            s_axi_bready   <= 1'b0;
+                            in_progress    <= 1'b0;
+                            reading_result <= 1'b1;
+                        end
+                    endcase
+                end
+            end else if (reading_result) begin
+                if (soc_done && !s_axi_arvalid && !latched_done) begin
+                    s_axi_araddr  <= 8'h28;
+                    s_axi_arvalid <= 1'b1;
+                    s_axi_rready  <= 1'b1;
+                end
+                if (s_axi_rvalid && s_axi_rready) begin
+                    s_axi_arvalid  <= 1'b0;
+                    s_axi_rready   <= 1'b0;
+                    latched_leds   <= s_axi_rdata[7:0];
+                    latched_done   <= 1'b1;
+                    reading_result <= 1'b0;
+                end
+            end
         end
     end
 
-    assign led_busy  = soc_busy;
-    assign led_done  = latched_done || soc_done;
+    assign led_busy  = soc_busy || in_progress;
+    assign led_done  = latched_done;
     assign led_fault = latched_fault || soc_fault || security_irq;
     assign led_data  = latched_leds;
 
