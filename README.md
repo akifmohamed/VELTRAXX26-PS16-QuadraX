@@ -24,7 +24,7 @@ In response to the official **VELTRAXX’26 PS 16 Wildcard Mandate**, Team **Qua
 
 ---
 
-## 2. System Architecture & Interconnect Block Diagram
+## 2. System Architecture Block Diagram
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────┐
@@ -69,7 +69,14 @@ In response to the official **VELTRAXX’26 PS 16 Wildcard Mandate**, Team **Qua
 
 ---
 
-## 3. AMBA AXI4-Lite Memory-Mapped Register Map
+## 3. Waveform Verification Proof
+
+### Verified GTKWave Execution Trace: NIST Encrypt KAT, Decrypt KAT & 1-Cycle Key Zeroization
+![Waveform Evidence](outputs/waveform_evidence.png)
+
+---
+
+## 4. AMBA AXI4-Lite Memory-Mapped Register Map
 
 | Offset | Register Name | R/W | Bit Fields & Descriptions |
 |:---:|---|:---:|---|
@@ -90,77 +97,102 @@ In response to the official **VELTRAXX’26 PS 16 Wildcard Mandate**, Team **Qua
 
 ---
 
-## 4. Verification Suite & NIST Known-Answer Test Results
+## 5. Verification Suite & NIST Known-Answer Test Results
 
-The design is fully validated through a self-checking testbench (`tb/tb_aes_axi_top.v`):
+The design is fully validated through a self-checking testbench (`tb/tb_aes_axi_top.v` and `tb/tb_aes_multi_kat.v`):
 
 ```
 ===============================================================================
-       VELTRAXX'26 PS 16 — TEAM QUADRAX VERIFICATION SUITE RESULTS             
+     VELTRAXX'26 PS16 (QUADRAX) — COMPREHENSIVE NIST MULTI-VECTOR SUITE        
 ===============================================================================
 
-[TEST 1] NIST SP 800-38A ECB Encryption Known-Answer Test:
-   - Key:        2b7e1516 28aed2a6 abf71588 09cf4f3c
-   - Plaintext:  6bc1bee2 2e409f96 e93d7e11 7393172a
-   - Measured:   3ad77bb4 0d7a3660 a89ecaf3 2466ef97
-   - Expected:   3ad77bb4 0d7a3660 a89ecaf3 2466ef97
-   >>> [STATUS: PASS (100% Bitwise Exact Match)]
+--- [NIST SP 800-38A TEST VECTOR 1] ---
+   [ENCRYPT 1] CT: 3ad77bb40d7a3660a89ecaf32466ef97 -> PASS
+   [DECRYPT 1] PT: 6bc1bee22e409f96e93d7e117393172a -> PASS
 
-[TEST 2] NIST SP 800-38A ECB Decryption Known-Answer Test:
-   - Ciphertext: 3ad77bb4 0d7a3660 a89ecaf3 2466ef97
-   - Measured:   6bc1bee2 2e409f96 e93d7e11 7393172a
-   - Expected:   6bc1bee2 2e409f96 e93d7e11 7393172a
-   >>> [STATUS: PASS (100% Bitwise Exact Match)]
+--- [NIST SP 800-38A TEST VECTOR 2] ---
+   [ENCRYPT 2] CT: f5d3d58503b9699de785895a96fdbaaf -> PASS
+   [DECRYPT 2] PT: ae2d8a571e03ac9c9eb76fac45af8e51 -> PASS
 
-[TEST 3] Active Fault-Injection & Instant 1-Cycle Key Zeroization:
-   - Injection Point: Mid-computation (Round 3)
-   - Abort Response:  1 Clock Cycle (Busy drops to 0 immediately)
-   - Interrupt Line:  security_irq Asserted (High)
-   - Key Registers:   All 11 round keys atomized to 0x00000000000000000000000000000000
-   >>> [STATUS: PASS (1-Cycle Hardware Lockdown Verified)]
+--- [NIST SP 800-38A TEST VECTOR 3] ---
+   [ENCRYPT 3] CT: 43b1cd7f598ece23881b00e3ed030688 -> PASS
+   [DECRYPT 3] PT: 30c81c46a35ce411e5fbc1191a0a52ef -> PASS
+
+--- [NIST SP 800-38A TEST VECTOR 4] ---
+   [ENCRYPT 4] CT: 7b0c785e27e8ad3f8223207104725dd4 -> PASS
+   [DECRYPT 4] PT: f69f2445df4f9b17ad2b417be66c3710 -> PASS
+
+--- [ACTIVE FAULT INJECTION & 1-CYCLE ZEROIZATION TEST] ---
+   [FAULT TAMPER] Security Status: 0x0000000c | Security IRQ Asserted -> PASS
 
 ===============================================================================
-   ALL 3 MANDATORY CHALLENGE DIRECTIVES FULLY VERIFIED (PASS: 3 / 3)
+   FINAL REGRESSION RESULTS: 9 / 9 TEST CASES PASSED (100% SIGN-OFF)
 ===============================================================================
 ```
 
 ---
 
-## 5. Physical Signoff & Implementation Metrics
+## 6. Physical Signoff & Implementation Metrics
+
+### 6.1 Live Physical Hardware Verification (Digilent Basys3 Artix-7)
+
+The design was programmed and physically validated on the **Digilent Basys3 Artix-7 FPGA (`xc7a35tcpg236-1`)**:
+
+| Demonstration Mode | Button Trigger | Status LEDs | Displayed Byte (`LD7..LD0`) | Physical Verification Evidence |
+|:---:|:---:|:---:|:---:|:---:|
+| **NIST SP 800-38A Encryption** | `btnU` | `LD15` (Done) = 1 | **`0x97`** (`10010111`b) | **PASS** (Ciphertext byte matched) |
+| **NIST SP 800-38A Decryption** | `btnD` | `LD15` (Done) = 1 | **`0x2A`** (`00101010`b) | **PASS** (Plaintext byte recovered) |
+| **Active Tamper / Zeroization** | `btnR` / `btnC` | `LD14` (Fault) / LD15 = 0 | **`0x00`** (`00000000`b) | **PASS** (1-cycle atomic wipeout) |
+
+| NIST Encryption (`0x97` Verified) | NIST Decryption (`0x2A` Verified) | Tamper Wipeout / Reset (`0x00`) |
+|:---:|:---:|:---:|
+| ![Basys3 Encryption](docs/fpga_demo/basys3_encryption_0x97.jpeg) | ![Basys3 Decryption](docs/fpga_demo/basys3_decryption_0x2A.jpeg) | ![Basys3 Tamper/Reset](docs/fpga_demo/basys3_tamper_reset_0x00.jpeg) |
+
+### 6.2 Implementation Signoff Summary
 
 | Metric | FPGA Target (Digilent Basys3) | ASIC Target (SkyWater 130nm) |
 |---|---|---|
 | **Target Technology** | AMD Xilinx Artix-7 (`xc7a35tcpg236-1`) | SkyWater 130nm High-Density (`sky130_fd_sc_hd`) |
-| **Operating Frequency** | 50 MHz (20.0 ns Clock Period) | 50 MHz Target Clock |
+| **Operating Frequency** | 50 MHz (20.0 ns Clock Period) | 50 MHz Target Clock ($F_{\text{max}} \approx 168\text{ MHz}$) |
+| **Timing Slack** | Positive Slack Verified | **+14.07 ns (TT)**, **+7.22 ns (SS Worst Corner)** |
+| **Die Area / Utilization** | Fits Basys3 Artix-7 slices | **240,307 µm²** (Core Utilization: 54% - 67.6%) |
+| **Design-for-Test (DFT)** | Hardware Status LEDs & Switches | **745 Scan Flops (100% sequential coverage)** |
 | **Computation Latency** | 10 Clock Cycles (200 ns per 128-bit block) | 10 Clock Cycles (200 ns per 128-bit block) |
+| **Hardware vs SW Speedup**| 114x – 128x vs ARM Cortex-M4 (1,136c) | 114x – 128x vs ARM Cortex-M4 (1,136c) |
 | **Sustained Throughput** | 0.64 Gbps sustained raw block rate | 0.64 Gbps sustained raw block rate |
 | **Physical Signoff** | Verified on Basys3 Hardware (LEDs & UART) | DRC Clean (0 errors), LVS Clean Match, 9-Corner Timing Clean |
-| **Power Consumption** | USB-powered (3.3V I/O, 1.0V core) | 6.08 mW (typical corner), Worst-case IR drop: 0.021% |
+| **Power Consumption** | USB-powered (3.3V I/O, 1.0V core) | **6.08 mW (0.122 mW/MHz)**, Worst IR drop: 0.021% |
 | **Tamper Resistance** | 1-Cycle Abort + Unmaskable Security IRQ | Real-time Parity Checking + Atomic Key Zeroization |
 
 ---
 
-## 6. How to Build, Simulate, and Synthesize
+## 7. How to Build, Simulate, and Synthesize
 
-### Running the Icarus Verilog Simulation & Waveform Dump
+### Running the Complete Automated Proof Suite
 ```bash
-./scripts/build_iverilog.sh
+./scripts/run_all_proofs.sh
 ```
-*Outputs:* Log at `logs/sim.log` and VCD waveform at `outputs/aes_axi_fault_sim.vcd`.
 
-### Running Yosys RTL Synthesis
+### Running Static Timing Analysis (STA)
 ```bash
-./scripts/run_yosys_synth.sh
+yosys -p "read_verilog outputs/aes_soc_netlist.v; hierarchy -check -top aes_soc_top; proc; ltp"
 ```
-*Outputs:* Netlist at `outputs/aes_soc_netlist.v` and synthesis log at `logs/synth.log`.
 
 ---
 
-## 7. Repository Directory Structure
+## 8. Repository Directory Structure
 
 ```text
 ├── README.md               # Complete architectural overview & reproduction guide
 ├── docs/                   # Architecture deep dives & benchmark documentation
+│   ├── architecture.md           # Mathematical composite GF formulation & sharing
+│   ├── axi_register_map.md       # Memory-mapped register specifications
+│   ├── rtl_to_gdsii_signoff.md   # OpenLane 2 / SkyWater 130nm ASIC signoff data
+│   ├── synthesis_and_timing_report.md # Gate counts, cell area & 9-corner timing
+│   ├── layout_views/             # High-resolution KLayout layout renders
+│   └── fpga_demo/                # Basys3 Artix-7 physical hardware verification
+├── gds/                    # Silicon GDSII Stream Deliverable
+│   └── aes_soc.gds               # Full-chip physical layout file
 ├── src/                    # Synthesizable RTL source files
 │   ├── aes_sbox_shared.v         # Unified composite Galois Field S-Box/InvS-Box cell
 │   ├── sub_bytes_shared.v        # 16 parallel unified S-Boxes
@@ -171,18 +203,24 @@ The design is fully validated through a self-checking testbench (`tb/tb_aes_axi_
 │   ├── axi4_lite_slave.v         # 32-bit AMBA AXI4-Lite slave interface
 │   └── aes_soc_top.v             # Top-level SoC IP block
 ├── tb/                     # Self-checking testbench suite
-│   └── tb_aes_axi_top.v          # NIST KAT & dynamic fault-injection testbench
+│   ├── tb_aes_axi_top.v          # Primary testbench
+│   └── tb_aes_multi_kat.v        # 9-vector comprehensive regression suite
 ├── constraints/            # Timing and FPGA pin constraint files
 │   ├── timing.sdc                # 50 MHz ASIC SDC constraint
 │   └── basys3.xdc                # Basys3 Artix-7 pin map constraint
-├── scripts/                # Automated build and synthesis scripts
+├── scripts/                # Automated build, synthesis and proof runners
+│   ├── run_all_proofs.sh         # Master verification and synthesis runner
 │   ├── build_iverilog.sh         # Simulation execution script
-│   └── run_yosys_synth.sh        # Yosys synthesis script
+│   ├── run_yosys_synth.sh        # Yosys synthesis script
+│   └── openlane_config.json      # SkyWater 130nm ASIC physical configuration
 ├── logs/                   # Raw execution logs as evaluation proof
-│   ├── sim.log                   # Icarus Verilog simulation log
+│   ├── sim_multi_kat.log         # 9/9 NIST regression pass log
+│   ├── sim.log                   # Primary simulation log
 │   └── synth.log                 # Yosys RTL synthesis log
 ├── outputs/                # Verification deliverables & waveforms
 │   ├── aes_axi_fault_sim.vcd     # Waveform showing AXI, Enc/Dec, and Zeroization
+│   ├── aes_sim.gtkw              # GTKWave saved layout configuration
+│   ├── waveform_evidence.png     # Verified GTKWave execution capture
 │   └── aes_soc_netlist.v         # Synthesized gate-level netlist
 └── presentation/           # Official VELTRAXX'26 Presentation Slides
     ├── QuadraX.pptx              # PowerPoint slide deck in official template
