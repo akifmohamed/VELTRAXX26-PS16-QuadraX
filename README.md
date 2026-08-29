@@ -4,13 +4,13 @@
 **Team Name:** QuadraX  
 **Team Members:** Akif Mohamed J (Lead), Pavissh, Selvi Stella, Sowbarnikha  
 **Institution:** Government College of Engineering Srirangam (GCE Srirangam)  
-**Target Hardware:** Digilent Basys3 (AMD Artix-7 `xc7a35tcpg236-1`) & SkyWater 130nm Standard-Cell ASIC (`sky130_fd_sc_hd`)
+**Target Hardware:** Digilent Basys3 (AMD Artix-7 `xc7a35tcpg236-1`) - FPGA hardware prototype (PS 16 custom-domain scope; SkyWater 130nm ASIC flow = future work)
 
 ---
 
 ## 1. Executive Engineering Overview
 
-In response to the official **VELTRAXX’26 PS 16 Wildcard Mandate**, Team **QuadraX** has upgraded its verified cryptographic baseline into a production-grade, silicon-hardened, and bidirectional **AES-128 Cryptographic System-on-Chip (SoC)** tailored for commercial edge IoT silicon.
+In response to the official **VELTRAXX’26 PS 16 Wildcard Mandate**, Team **QuadraX** has upgraded its verified cryptographic baseline into a production-grade, hardware-verified, and bidirectional **AES-128 Cryptographic System-on-Chip (SoC)** tailored for commercial edge IoT silicon.
 
 ### The 3 Mandatory Architectural Directives Executed:
 1. **Bidirectional Resource-Shared Datapath (Unified Encrypt/Decrypt):**
@@ -132,7 +132,7 @@ The design is fully validated through a self-checking testbench (`tb/tb_aes_axi_
 
 ---
 
-## 6. Physical Signoff & Implementation Metrics
+## 6. Hardware Verification & Implementation Metrics
 
 ### 6.1 Live Physical Hardware Verification (Digilent Basys3 Artix-7)
 
@@ -148,21 +148,21 @@ The design was programmed and physically validated on the **Digilent Basys3 Arti
 |:---:|:---:|:---:|
 | ![Basys3 Encryption](docs/fpga_demo/basys3_encryption_0x97.jpeg) | ![Basys3 Decryption](docs/fpga_demo/basys3_decryption_0x2A.jpeg) | ![Basys3 Tamper/Reset](docs/fpga_demo/basys3_tamper_reset_0x00.jpeg) |
 
-### 6.2 Implementation Signoff Summary
+### 6.2 Implementation Results Summary (executed evidence only)
 
-| Metric | FPGA Target (Digilent Basys3) | ASIC Target (SkyWater 130nm) |
+| Metric | Value | Evidence |
 |---|---|---|
-| **Target Technology** | AMD Xilinx Artix-7 (`xc7a35tcpg236-1`) | SkyWater 130nm High-Density (`sky130_fd_sc_hd`) |
-| **Operating Frequency** | 50 MHz (20.0 ns Clock Period) | 50 MHz Target Clock ($F_{\text{max}} \approx 168\text{ MHz}$) |
-| **Timing Slack** | Positive Slack Verified | **+14.07 ns (TT)**, **+7.22 ns (SS Worst Corner)** |
-| **Die Area / Utilization** | Fits Basys3 Artix-7 slices | **240,307 µm²** (Core Utilization: 54% - 67.6%) |
-| **Design-for-Test (DFT)** | Hardware Status LEDs & Switches | **745 Scan Flops (100% sequential coverage)** |
-| **Computation Latency** | 10 Clock Cycles (200 ns per 128-bit block) | 10 Clock Cycles (200 ns per 128-bit block) |
-| **Hardware vs SW Speedup**| 114x – 128x vs ARM Cortex-M4 (1,136c) | 114x – 128x vs ARM Cortex-M4 (1,136c) |
-| **Sustained Throughput** | 0.64 Gbps sustained raw block rate | 0.64 Gbps sustained raw block rate |
-| **Physical Signoff** | Verified on Basys3 Hardware (LEDs & UART) | DRC Clean (0 errors), LVS Clean Match, 9-Corner Timing Clean |
-| **Power Consumption** | USB-powered (3.3V I/O, 1.0V core) | **6.08 mW (0.122 mW/MHz)**, Worst IR drop: 0.021% |
-| **Tamper Resistance** | 1-Cycle Abort + Unmaskable Security IRQ | Real-time Parity Checking + Atomic Key Zeroization |
+| Target | Digilent Basys3, Artix-7 `xc7a35tcpg236-1` @ 50 MHz | docs/fpga_demo photos |
+| Synthesis | Yosys 0.9, gate-level netlist committed | logs/synth.log, outputs/aes_soc_netlist.v |
+| Functional regression | 9 / 9 PASS (4x encrypt KAT, 4x decrypt KAT, fault+zeroize) | logs/sim_multi_kat.log |
+| Directive verification | 3 / 3 PASS (bidirectional, tamper/zeroize, AXI4-Lite) | logs/sim.log |
+| Datapath | Iterative 10-round, shared GF S-Box forward/inverse | src/, GTKWave evidence in outputs/ |
+| Hardware demo | Encrypt 0x97, Decrypt 0x2A, Tamper wipeout 0x00 | docs/fpga_demo photos |
+
+Note: a SkyWater 130nm ASIC physical flow (OpenLane/OpenROAD, DRC/LVS,
+multi-corner STA) is future work for this `aes_soc_top` integration and is
+not claimed here. PS 16 is a custom-domain statement; the delivered scope
+is RTL + synthesis + simulation + live FPGA verification.
 
 ---
 
@@ -173,7 +173,7 @@ The design was programmed and physically validated on the **Digilent Basys3 Arti
 ./scripts/run_all_proofs.sh
 ```
 
-### Running Static Timing Analysis (STA)
+### Logic Depth Check (Yosys)
 ```bash
 yosys -p "read_verilog outputs/aes_soc_netlist.v; hierarchy -check -top aes_soc_top; proc; ltp"
 ```
@@ -187,12 +187,8 @@ yosys -p "read_verilog outputs/aes_soc_netlist.v; hierarchy -check -top aes_soc_
 ├── docs/                   # Architecture deep dives & benchmark documentation
 │   ├── architecture.md           # Mathematical composite GF formulation & sharing
 │   ├── axi_register_map.md       # Memory-mapped register specifications
-│   ├── rtl_to_gdsii_signoff.md   # OpenLane 2 / SkyWater 130nm ASIC signoff data
-│   ├── synthesis_and_timing_report.md # Gate counts, cell area & 9-corner timing
-│   ├── layout_views/             # High-resolution KLayout layout renders
+│   ├── synthesis_and_timing_report.md # Gate counts (Yosys) & verification summary
 │   └── fpga_demo/                # Basys3 Artix-7 physical hardware verification
-├── gds/                    # Silicon GDSII Stream Deliverable
-│   └── aes_soc.gds               # Full-chip physical layout file
 ├── src/                    # Synthesizable RTL source files
 │   ├── aes_sbox_shared.v         # Unified composite Galois Field S-Box/InvS-Box cell
 │   ├── sub_bytes_shared.v        # 16 parallel unified S-Boxes
@@ -212,7 +208,7 @@ yosys -p "read_verilog outputs/aes_soc_netlist.v; hierarchy -check -top aes_soc_
 │   ├── run_all_proofs.sh         # Master verification and synthesis runner
 │   ├── build_iverilog.sh         # Simulation execution script
 │   ├── run_yosys_synth.sh        # Yosys synthesis script
-│   └── openlane_config.json      # SkyWater 130nm ASIC physical configuration
+│   └── build_basys3_bitstream.tcl # Vivado batch bitstream build
 ├── logs/                   # Raw execution logs as evaluation proof
 │   ├── sim_multi_kat.log         # 9/9 NIST regression pass log
 │   ├── sim.log                   # Primary simulation log

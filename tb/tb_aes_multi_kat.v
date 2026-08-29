@@ -163,8 +163,8 @@ module tb_aes_multi_kat;
             // 6. Decrypt Test
             axi_write(8'h18, test_ct[i][31:0]);
             axi_write(8'h1C, test_ct[i][63:32]);
-            axi_write(8'h20, test_pt[i][95:64]);
-            axi_write(8'h24, test_pt[i][127:96]);
+            axi_write(8'h20, test_ct[i][95:64]);
+            axi_write(8'h24, test_ct[i][127:96]);
             axi_write(8'h00, 32'h00000003); // Start Decrypt
 
             r_val = 0;
@@ -187,16 +187,23 @@ module tb_aes_multi_kat;
 
         // Fault Injection Test
         $display("\n--- [ACTIVE FAULT INJECTION & 1-CYCLE ZEROIZATION TEST] ---");
-        axi_write(8'h00, 32'h00000009); // Start Encrypt + Fault Inject
-        #40;
+        axi_write(8'h00, 32'h00000001); // Start Encrypt
+        #40; // mid-computation
+        axi_write(8'h00, 32'h00000008); // Inject fault during active computation
+        #20;
         axi_read(8'h04, r_val);
         if ((r_val & 32'h0C) == 32'h0C && security_irq === 1'b1) begin
             $display("   [FAULT TAMPER] Security Status: 0x%08h | Security IRQ Asserted -> PASS", r_val);
             pass_count = pass_count + 1;
+        end else begin
+            $display("   [FAULT TAMPER] FAIL - status 0x%08h irq=%b", r_val, security_irq);
         end
 
         $display("\n===============================================================================");
-        $display("   FINAL REGRESSION RESULTS: %0d / 9 TEST CASES PASSED (100%% SIGN-OFF)", pass_count);
+        if (pass_count == 9)
+            $display("   FINAL REGRESSION RESULTS: %0d / 9 TEST CASES PASSED - ALL VECTORS VERIFIED", pass_count);
+        else
+            $display("   FINAL REGRESSION RESULTS: %0d / 9 TEST CASES PASSED - SUITE NOT CLEAN", pass_count);
         $display("===============================================================================\n");
 
         $finish;
